@@ -1,10 +1,33 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Asiakas extends CI_Controller { 
+class Asiakas extends CI_Controller {
+	function __construct() {
+        parent::__construct();
+        $this->load->model('Asiakas_model');
+    }
+		
 	public function naytaAsiakas() {
-		$this->load->model('Asiakas_model');
+		
 		$data['asiakkaat']=$this->Asiakas_model->getAsiakas();
 		$data['sivun_sisalto']="asiakas/naytaAsiakas";
+		$this->load->view('menu/valikko',$data);
+	}
+	
+	public function lisaaAsiakas() {
+		$btn=$this->input->post('btn');
+		if(isset($btn)) {
+			$lisaa_data=array(
+			"etunimi"=>$this->input->post('en'),
+			"sukunimi"=>$this->input->post('sn'),
+			"email"=>$this->input->post('email')
+			);
+			$testi=$this->Asiakas_model->addAsiakas($lisaa_data);
+			if($testi>0) {
+				echo '<script>alert("Lisäys onnistui!")</script>;';
+			}
+		}
+		
+		$data['sivun_sisalto']="asiakas/lisaaAsiakas";
 		$this->load->view('menu/valikko',$data);
 	}
 }
