@@ -23,11 +23,34 @@ class Asiakas extends CI_Controller {
 			);
 			$testi=$this->Asiakas_model->addAsiakas($lisaa_data);
 			if($testi>0) {
-				echo '<script>alert("Lisäys onnistui!")</script>;';
+				$data['ilmoitus']="Lisäys onnistui!";
 			}
 		}
 		
 		$data['sivun_sisalto']="asiakas/lisaaAsiakas";
 		$this->load->view('menu/valikko',$data);
+				
 	}
+	public function naytaMuokattava($id) {
+		$data['asiakas'] =  $this->Asiakas_model->getValittuAsiakas($id);
+		$data['sivun_sisalto']="asiakas/naytaMuokattavaAsiakas";
+		$this->load->view('menu/valikko',$data);
+	}
+	public function muokkaaAsiakas() {
+		$btn=$this->input->post('btn');
+		$update_id=$this->input->post('id');
+		if(isset($btn)) {
+			$update_data = array(
+				"etunimi"=>$this->input->post('en'),
+				"sukunimi"=>$this->input->post('sn'),
+				"email"=>$this->input->post('email')
+			);
+			
+			$testi=$this->Asiakas_model->updateAsiakas($update_id, $update_data);
+			if($testi>0) {
+				$this->naytaAsiakas();
+			}
+		}
+	}
+	
 }
